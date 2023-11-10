@@ -235,6 +235,12 @@ final class IndexingChain implements Accountable {
         state.segmentInfo.maxDoc(), comparators.toArray(IndexSorter.DocComparator[]::new));
   }
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * Lucene Flush操作, 生成新的Segment; Lucene Flush操作是 Lucene Commit操作的一部分
+   */
   Sorter.DocMap flush(SegmentWriteState state) throws IOException {
 
     // NOTE: caller (DocumentsWriterPerThread) handles
@@ -380,6 +386,7 @@ final class IndexingChain implements Accountable {
     DocValuesConsumer dvConsumer = null;
     boolean success = false;
     try {
+      // Jacob 遍历每个字段, 为每个字段写入 doc_values (如果需要的话)
       for (int i = 0; i < fieldHash.length; i++) {
         PerField perField = fieldHash[i];
         while (perField != null) {

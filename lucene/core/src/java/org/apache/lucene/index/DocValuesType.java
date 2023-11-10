@@ -16,20 +16,37 @@
  */
 package org.apache.lucene.index;
 
+
+/**
+ * @author Jacob.Hu
+ *
+ * doc_values六种类型
+ */
 /**
  * DocValues types. Note that DocValues is strongly typed, so a field cannot have different types
  * across different documents.
  */
 public enum DocValuesType {
+
+  // Jacob 该字段不存储doc_values, e.g. text类型或显式指定了不生成doc_values的字段
   /** No doc values for this field. */
   NONE,
+
+
+  // Jacob 数值类型都使用此种类型doc_values, e.g. 整数/浮点数
   /** A per-document Number */
   NUMERIC,
+
+
+  // Jacob 字节数组
   /**
    * A per-document byte[]. Values may be larger than 32766 bytes, but different codecs may enforce
    * their own limits.
    */
   BINARY,
+
+
+  // Jacob 单值, keyword
   /**
    * A pre-sorted byte[]. Fields with this type only store distinct byte values and store an
    * additional offset pointer per document to dereference the shared byte[]. The stored byte[] is
@@ -37,11 +54,17 @@ public enum DocValuesType {
    * 32766} bytes.
    */
   SORTED,
+
+
+  // Jacob 多值, 数值
   /**
    * A pre-sorted Number[]. Fields with this type store numeric values in sorted order according to
    * {@link Long#compare(long, long)}.
    */
   SORTED_NUMERIC,
+
+
+  // Jacob 多值, keyword
   /**
    * A pre-sorted Set&lt;byte[]&gt;. Fields with this type only store distinct byte values and store
    * additional offset pointers per document to dereference the shared byte[]s. The stored byte[] is

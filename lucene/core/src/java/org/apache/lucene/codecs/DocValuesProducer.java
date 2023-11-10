@@ -26,6 +26,12 @@ import org.apache.lucene.index.SortedDocValues;
 import org.apache.lucene.index.SortedNumericDocValues;
 import org.apache.lucene.index.SortedSetDocValues;
 
+
+/**
+ * @author Jacob.Hu
+ *
+ * doc_values生产者接口定义, 对应五种doc_values类型, 用于读取doc_values
+ */
 /**
  * Abstract API that produces numeric, binary, sorted, sortedset, and sortednumeric docvalues.
  *

@@ -66,7 +66,10 @@ import org.apache.lucene.util.compress.LZ4.FastCompressionHashTable;
 final class Lucene80DocValuesConsumer extends DocValuesConsumer {
 
   final Lucene80DocValuesFormat.Mode mode;
+
+  // Jacob data,meta 分别指向doc_values 的数据和元数据文件, 即dvd和dvm文件
   IndexOutput data, meta;
+
   final int maxDoc;
   private final SegmentWriteState state;
   private byte[] termsDictBuffer;
@@ -141,13 +144,16 @@ final class Lucene80DocValuesConsumer extends DocValuesConsumer {
   @Override
   public void addNumericField(FieldInfo field, DocValuesProducer valuesProducer)
       throws IOException {
+    // Jacob 向元数据文件(dvm) 里写入元数据信息, 字段内联ID和doc_values类型
     meta.writeInt(field.number);
     meta.writeByte(Lucene80DocValuesFormat.NUMERIC);
 
     writeValues(
         field,
+        // Jacob 分配一个只支持获取SortedNumericDocValues的读取者
         new EmptyDocValuesProducer() {
           @Override
+          // TODO: 2023/10/11 Jacob Numeric => SortedNumeric
           public SortedNumericDocValues getSortedNumeric(FieldInfo field) throws IOException {
             return DocValues.singleton(valuesProducer.getNumeric(field));
           }
@@ -189,6 +195,8 @@ final class Lucene80DocValuesConsumer extends DocValuesConsumer {
     }
   }
 
+
+  // Jacob 用于数值类型doc_values写入(Numeric/SortedNumeric)
   private long[] writeValues(FieldInfo field, DocValuesProducer valuesProducer) throws IOException {
     SortedNumericDocValues values = valuesProducer.getSortedNumeric(field);
     int numDocsWithValue = 0;

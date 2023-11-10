@@ -19,8 +19,20 @@ package org.apache.lucene.index;
 import java.io.IOException;
 import org.apache.lucene.search.DocIdSetIterator;
 
+
+/**
+ * @author Jacob.Hu
+ *
+ * doc_values迭代器
+ */
 abstract class DocValuesIterator extends DocIdSetIterator {
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 前进到target位置并且返回该位置是否有值
+   */
   /**
    * Advance the iterator to exactly {@code target} and return whether {@code target} has a value.
    * {@code target} must be greater than or equal to the current {@link #docID() doc ID} and must be

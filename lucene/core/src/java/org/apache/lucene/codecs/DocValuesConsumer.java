@@ -48,6 +48,12 @@ import org.apache.lucene.util.LongBitSet;
 import org.apache.lucene.util.LongValues;
 import org.apache.lucene.util.packed.PackedInts;
 
+
+/**
+ * @author Jacob.Hu
+ *
+ * doc_values消费者接口定义, 用于写入doc_values
+ */
 /**
  * Abstract API that consumes numeric, binary and sorted docvalues. Concrete implementations of this
  * actually do "something" with the docvalues (write it into the index in a specific format).

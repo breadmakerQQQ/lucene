@@ -18,6 +18,13 @@ package org.apache.lucene.search;
 
 import java.io.IOException;
 
+
+/**
+ * @author Jacob.Hu
+ *
+ * 抽象类, 提供一个用于迭代Lucene Document ID的接口; 在一个Lucene实例中(Segment), 得益于其创建时的异步解耦无并发无外界干扰,
+ * Lucene ID可以做到严格紧密递增, 即0,1,2,3,4...而没有间隙, 这样在存储doc的某些相关信息时, 可以通过数组偏移量来表达其Lucene ID;
+ */
 /**
  * This abstract class defines methods to iterate over a set of non-decreasing doc ids. Note that
  * this class assumes it iterates on doc Ids, and therefore {@link #NO_MORE_DOCS} is set to {@value
@@ -26,9 +33,16 @@ import java.io.IOException;
  */
 public abstract class DocIdSetIterator {
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 空迭代器实现, 只会返回 -1(未迭代时) 或{@link Integer.MAX_VALUE}(迭代后)
+   */
   /** An empty {@code DocIdSetIterator} instance */
   public static final DocIdSetIterator empty() {
     return new DocIdSetIterator() {
+      // Jacob 一个新颖的写法: 匿名内部类的成员变量
       boolean exhausted = false;
 
       @Override
@@ -58,6 +72,12 @@ public abstract class DocIdSetIterator {
     };
   }
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 满编迭代器实现, 充斥满从 0, 1, 2..., (maxDoc-1) 所有ID
+   */
   /** A {@link DocIdSetIterator} that matches all documents up to {@code maxDoc - 1}. */
   public static final DocIdSetIterator all(int maxDoc) {
     return new DocIdSetIterator() {
@@ -89,6 +109,13 @@ public abstract class DocIdSetIterator {
     };
   }
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 范围满编迭代器实现, 充斥满从 minDoc, (minDoc+1), .., (maxDoc-1) 所有ID; 这里和{@link DocIdSetIterator#all(int)}的迭代器
+   * 都没有严格要求只能前进, 可以通过{@link DocIdSetIterator#advance(int)}达到后退目的
+   */
   /**
    * A {@link DocIdSetIterator} that matches a range documents from minDocID (inclusive) to maxDocID
    * (exclusive).
@@ -139,6 +166,12 @@ public abstract class DocIdSetIterator {
    */
   public static final int NO_MORE_DOCS = Integer.MAX_VALUE;
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 返回当前迭代到的Lucene ID, 返回-1 当还未开始迭代时, 返回{@link Integer.MAX_VALUE} 当迭代器所有元素消耗完毕
+   */
   /**
    * Returns the following:
    *
@@ -152,6 +185,12 @@ public abstract class DocIdSetIterator {
    */
   public abstract int docID();
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 迭代下一个Lucene ID
+   */
   /**
    * Advances to the next document in the set and returns the doc it is currently on, or {@link
    * #NO_MORE_DOCS} if there are no more docs in the set.<br>
@@ -162,6 +201,12 @@ public abstract class DocIdSetIterator {
    */
   public abstract int nextDoc() throws IOException;
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 直接前进到目标Lucene ID
+   */
   /**
    * Advances to the first beyond the current whose document number is greater than or equal to
    * <i>target</i>, and returns the document number itself. Exhausts the iterator and returns {@link
@@ -191,6 +236,12 @@ public abstract class DocIdSetIterator {
    */
   public abstract int advance(int target) throws IOException;
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * {@link #advance}的慢速线性实现, 通过{@link #nextDoc()}一步步迭代直到触碰到目标值
+   */
   /**
    * Slow (linear) implementation of {@link #advance} relying on {@link #nextDoc()} to advance
    * beyond the target position.
@@ -204,6 +255,12 @@ public abstract class DocIdSetIterator {
     return doc;
   }
 
+
+  /**
+   * @author Jacob.Hu
+   *
+   * 返回一个大概的这个迭代器中的Lucene ID数量, 不要求准确但绝对要大于等于实际的ID数量
+   */
   /**
    * Returns the estimated cost of this {@link DocIdSetIterator}.
    *

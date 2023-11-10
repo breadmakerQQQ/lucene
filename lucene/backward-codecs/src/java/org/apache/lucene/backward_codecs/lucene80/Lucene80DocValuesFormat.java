@@ -29,6 +29,12 @@ import org.apache.lucene.index.SegmentWriteState;
 import org.apache.lucene.store.DataOutput;
 import org.apache.lucene.util.SmallFloat;
 
+
+/**
+ * @author Jacob.Hu
+ *
+ *
+ */
 /**
  * Lucene 8.0 DocValues format.
  *
@@ -189,12 +195,15 @@ public final class Lucene80DocValuesFormat extends DocValuesFormat {
   static final int VERSION_CONFIGURABLE_COMPRESSION = 2;
   static final int VERSION_CURRENT = VERSION_CONFIGURABLE_COMPRESSION;
 
+
+  // Jacob dvm文件内的doc_values类型编码
   // indicates docvalues type
   static final byte NUMERIC = 0;
   static final byte BINARY = 1;
   static final byte SORTED = 2;
   static final byte SORTED_SET = 3;
   static final byte SORTED_NUMERIC = 4;
+
 
   static final int DIRECT_MONOTONIC_BLOCK_SHIFT = 16;
 

@@ -20,6 +20,11 @@ package org.apache.lucene.index;
 import java.io.IOException;
 import org.apache.lucene.codecs.DocValuesProducer;
 
+/**
+ * @author Jacob.Hu
+ *
+ * 提供一个不支持任何doc_values读取操作的默认公用抽象类
+ */
 /** Abstract base class implementing a {@link DocValuesProducer} that has no doc values. */
 public abstract class EmptyDocValuesProducer extends DocValuesProducer {
 
